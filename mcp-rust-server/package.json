@@ -1,0 +1,13 @@
+{
+  "name": "mcp-rust-server",
+  "version": "1.0.0",
+  "main": "test-mcp-server.js",
+  "scripts": {
+    "test": "node test-mcp-server.js",
+    "start": "cargo run"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
