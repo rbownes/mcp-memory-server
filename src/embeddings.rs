@@ -9,8 +9,7 @@ use ort::{Environment, Session, SessionBuilder, Value, GraphOptimizationLevel, L
 use ort::tensor::OrtOwnedTensor;
 use tokenizers::Tokenizer;
 // Import ndarray types needed
-// *** FIX: Removed unused Ix3, CowRepr, Dim ***
-use ndarray::{Array, ArrayBase, Axis, Ix2, IxDyn, OwnedRepr, Data, ArrayView}; // Keep needed types
+use ndarray::{Array, ArrayBase, Axis, Ix2, IxDyn, Data}; // Remove unused imports
 
 #[derive(thiserror::Error, Debug)]
 pub enum EmbeddingError {
@@ -182,8 +181,18 @@ impl OnnxEmbeddingGenerator {
         let sum_mask = owned_expanded_mask.sum_axis(Axis(1));
         let clamped_sum_mask = sum_mask.mapv(|x| x.max(1e-9));
         let mean_pooled_embeddings = sum_embeddings / clamped_sum_mask;
-
-        Ok(mean_pooled_embeddings)
+        
+        // Convert from dynamic dimensions to explicit Ix2
+        // First convert to Vec<f32>
+        let data_vec: Vec<f32> = mean_pooled_embeddings.iter().cloned().collect();
+        
+        // Then create a new array with the desired shape
+        let result = Array::from_shape_vec(
+            (batch_size, hidden_size),
+            data_vec
+        ).map_err(|e| EmbeddingError::OutputProcessingError(format!("Failed to reshape result: {}", e)))?;
+        
+        Ok(result)
     }
 
     fn normalize_l2(v: &mut [f32]) {
@@ -216,40 +225,34 @@ impl EmbeddingGenerator for OnnxEmbeddingGenerator {
 
         let allocator = self.session.allocator();
 
-        // Define the shape for the input tensors
-        let input_shape: Vec<i64> = vec![batch_size as i64, sequence_length as i64];
+        // Define the shape for the input tensors (not used, but fixed comma)
+        let _input_shape: Vec<i64> = vec![batch_size as i64, sequence_length as i64];
 
         // *** FIX E0308: Create tensors directly and copy data ***
 
-        // Create tensor for input_ids
-        let mut ids_tensor = Value::create_tensor::<i64>(allocator, &input_shape)?;
-        // Ensure the ndarray is in standard layout for slicing
+        // Import CowArray for ONNX
+        use ndarray::CowArray;
+        
+        // Create all arrays first
         let ids_array = Array::from_shape_vec((batch_size, sequence_length), ids)
-            .map_err(|e| EmbeddingError::TensorError(format!("Failed to create ids ndarray: {}", e)))?
-            .as_standard_layout()
-            .to_owned(); // Use owned standard layout
-        ids_tensor.tensor_data_mut()?
-            .copy_from_slice(ids_array.as_slice().ok_or_else(|| EmbeddingError::TensorError("Failed to get slice from ids_array".to_string()))?);
-
-        // Create tensor for attention_mask
-        let mut mask_tensor = Value::create_tensor::<i64>(allocator, &input_shape)?;
+            .map_err(|e| EmbeddingError::TensorError(format!("Failed to create ids ndarray: {}", e)))?;
+        
         let mask_array = Array::from_shape_vec((batch_size, sequence_length), mask.clone()) // Clone mask for pooling later
-             .map_err(|e| EmbeddingError::TensorError(format!("Failed to create mask ndarray: {}", e)))?
-             .as_standard_layout()
-             .to_owned();
-        mask_tensor.tensor_data_mut()?
-            .copy_from_slice(mask_array.as_slice().ok_or_else(|| EmbeddingError::TensorError("Failed to get slice from mask_array".to_string()))?);
-
-        // Create tensor for token_type_ids
-        let mut type_ids_tensor = Value::create_tensor::<i64>(allocator, &input_shape)?;
+             .map_err(|e| EmbeddingError::TensorError(format!("Failed to create mask ndarray: {}", e)))?;
+        
         let type_ids_array = Array::from_shape_vec((batch_size, sequence_length), type_ids)
-             .map_err(|e| EmbeddingError::TensorError(format!("Failed to create type_ids ndarray: {}", e)))?
-             .as_standard_layout()
-             .to_owned();
-        type_ids_tensor.tensor_data_mut()?
-             .copy_from_slice(type_ids_array.as_slice().ok_or_else(|| EmbeddingError::TensorError("Failed to get slice from type_ids_array".to_string()))?);
-
-
+             .map_err(|e| EmbeddingError::TensorError(format!("Failed to create type_ids ndarray: {}", e)))?;
+        
+        // Create CowArrays that will live for the duration of the function
+        let ids_cow_array = CowArray::from(ids_array.view().into_dyn());
+        let mask_cow_array = CowArray::from(mask_array.view().into_dyn());
+        let type_ids_cow_array = CowArray::from(type_ids_array.view().into_dyn());
+        
+        // Create tensors using from_array
+        let ids_tensor = Value::from_array(allocator, &ids_cow_array)?;
+        let mask_tensor = Value::from_array(allocator, &mask_cow_array)?;
+        let type_ids_tensor = Value::from_array(allocator, &type_ids_cow_array)?;
+        
         // Collect tensors for input
         let inputs_onnx = vec![ids_tensor, mask_tensor, type_ids_tensor];
 

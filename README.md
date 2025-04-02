@@ -16,7 +16,7 @@ This is a Rust implementation of the Model Context Protocol (MCP) Memory Service
   - ChromaDB storage (for production use)
 - Supports multiple embedding models:
   - Dummy embedding generator (for testing and development)
-  - ONNX embedding model (stub implementation for future development)
+  - ONNX embedding model (transformer-based embeddings using ONNX Runtime)
 
 ## Prerequisites
 
@@ -110,9 +110,66 @@ After starting the server with `cargo run`, you can send JSON-RPC requests to it
 {"jsonrpc":"2.0","id":3,"method":"call_tool","params":{"name":"store_memory","arguments":{"content":"This is a test memory","tags":["test","example"]}}}
 ```
 
+## ONNX Embedding Implementation
+
+The ONNX embedding model implementation uses the ONNX Runtime to run transformer-based models for generating embeddings. Here's how it works:
+
+1. **Model Loading**: The `OnnxEmbeddingGenerator` loads a pre-trained transformer model in ONNX format and a tokenizer from the specified paths.
+
+2. **Tokenization**: Input text is tokenized using the HuggingFace `tokenizers` library, which converts text into token IDs, attention masks, and token type IDs.
+
+3. **Inference**: The tokenized inputs are passed to the ONNX model, which produces the transformer's hidden states.
+
+4. **Mean Pooling**: The last hidden state is processed using mean pooling (weighted by the attention mask) to create a fixed-size embedding vector.
+
+5. **Normalization**: The resulting embedding is L2-normalized to ensure consistent vector magnitudes.
+
+To use the ONNX embedding model:
+
+1. Export a transformer model (like BERT, RoBERTa, etc.) to ONNX format using a tool like HuggingFace's `transformers.onnx`.
+2. Save the tokenizer as a `tokenizer.json` file in the same directory as the model or specify a separate path.
+3. Set the environment variables:
+   ```bash
+   MCP_MEMORY_EMBEDDING_MODEL=onnx
+   MCP_MEMORY_EMBEDDING_MODEL_PATH=/path/to/model.onnx
+   MCP_MEMORY_EMBEDDING_SIZE=768  # Adjust based on your model's output size
+   ```
+
+## Registering with an MCP Client
+
+To register this server with an MCP client (like Claude), you need to add it to the client's MCP configuration. Here's an example JSON configuration:
+
+```json
+{
+  "mcpServers": {
+    "memory-service": {
+      "command": "/path/to/mcp-rust-server",
+      "args": [],
+      "env": {
+        "MCP_MEMORY_STORAGE_BACKEND": "inmemory",
+        "MCP_MEMORY_EMBEDDING_MODEL": "onnx",
+        "MCP_MEMORY_EMBEDDING_MODEL_PATH": "/path/to/model.onnx",
+        "MCP_MEMORY_EMBEDDING_SIZE": "768",
+        "MCP_MEMORY_LOG_LEVEL": "info"
+      },
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
+```
+
+For Claude Desktop, this configuration would be added to:
+- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+- Linux: `~/.config/Claude/claude_desktop_config.json`
+
+For Claude VSCode extension, the configuration would be added to:
+- `~/Library/Application Support/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json`
+
 ## Future Improvements
 
-- Implement a real ONNX embedding model
+- Add support for more transformer architectures
 - Add more storage backends
 - Add more embedding models
 - Add more tools for memory management

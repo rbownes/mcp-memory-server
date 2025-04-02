@@ -6,7 +6,7 @@ use rmcp::{
 };
 use std::sync::Arc;
 // *** Import MakeWriter trait ***
-use tracing_subscriber::{self, fmt::MakeWriter, EnvFilter}; // Make sure MakeWriter is imported
+use tracing_subscriber::{self, EnvFilter}; // Removed unused MakeWriter import
 
 // Module declarations
 mod config;
