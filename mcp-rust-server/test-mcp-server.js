@@ -13,7 +13,7 @@ class McpTester {
   }
 
   async start() {
-    console.log('Starting MCP server...');
+    console.log('Starting MCP Memory Service...');
     
     // Spawn the MCP server process
     this.serverProcess = spawn('cargo', ['run'], { 
@@ -101,14 +101,43 @@ class McpTester {
       await this.initialize();
       await this.listTools();
       
-      // Test hello tool
-      await this.callTool("hello", { name: "Rust MCP" });
+      // Test store_memory tool
+      console.log('\n--- Testing store_memory tool ---');
+      await this.callTool("store_memory", { 
+        content: "This is a test memory",
+        tags: ["test", "example"],
+        memory_type: "note",
+        metadata: {
+          source: "test-script",
+          importance: "high"
+        }
+      });
       
-      // Test increment tool
-      await this.callTool("increment");
+      // Test store_memory tool with minimal parameters
+      console.log('\n--- Testing store_memory tool with minimal parameters ---');
+      await this.callTool("store_memory", { 
+        content: "This is another test memory"
+      });
       
-      // Test get_counter tool
-      await this.callTool("get_counter");
+      // Test retrieve_memory tool
+      console.log('\n--- Testing retrieve_memory tool ---');
+      await this.callTool("retrieve_memory", {
+        query: "test memory",
+        n_results: 5
+      });
+      
+      // Test search_by_tag tool
+      console.log('\n--- Testing search_by_tag tool ---');
+      await this.callTool("search_by_tag", {
+        tags: ["test"]
+      });
+      
+      // Test delete_memory tool (assuming we have a memory with this hash)
+      // In a real test, we would get the hash from the store_memory response
+      console.log('\n--- Testing delete_memory tool ---');
+      await this.callTool("delete_memory", {
+        content_hash: "f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2"
+      });
       
       console.log('\nAll tests completed successfully!');
     } catch (error) {

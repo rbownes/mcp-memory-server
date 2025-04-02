@@ -1,0 +1,11 @@
+/Users/richardbownes/mcp-terminal-server/mcp-rust-server/target/debug/deps/libsha2-ac39159702f8ecc7.rmeta: /Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sha2-0.10.8/src/lib.rs /Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sha2-0.10.8/src/core_api.rs /Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sha2-0.10.8/src/sha256.rs /Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sha2-0.10.8/src/sha512.rs /Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sha2-0.10.8/src/consts.rs /Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sha2-0.10.8/src/sha256/soft.rs /Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sha2-0.10.8/src/sha512/soft.rs
+
+/Users/richardbownes/mcp-terminal-server/mcp-rust-server/target/debug/deps/sha2-ac39159702f8ecc7.d: /Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sha2-0.10.8/src/lib.rs /Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sha2-0.10.8/src/core_api.rs /Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sha2-0.10.8/src/sha256.rs /Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sha2-0.10.8/src/sha512.rs /Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sha2-0.10.8/src/consts.rs /Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sha2-0.10.8/src/sha256/soft.rs /Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sha2-0.10.8/src/sha512/soft.rs
+
+/Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sha2-0.10.8/src/lib.rs:
+/Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sha2-0.10.8/src/core_api.rs:
+/Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sha2-0.10.8/src/sha256.rs:
+/Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sha2-0.10.8/src/sha512.rs:
+/Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sha2-0.10.8/src/consts.rs:
+/Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sha2-0.10.8/src/sha256/soft.rs:
+/Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/sha2-0.10.8/src/sha512/soft.rs:

@@ -1,0 +1,11 @@
+/Users/richardbownes/mcp-terminal-server/mcp-rust-server/target/debug/deps/libxattr-c176d45f37a08567.rmeta: /Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/xattr-1.5.0/src/lib.rs /Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/xattr-1.5.0/src/error.rs /Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/xattr-1.5.0/src/sys/mod.rs /Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/xattr-1.5.0/src/util.rs /Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/xattr-1.5.0/src/sys/linux_macos.rs
+
+/Users/richardbownes/mcp-terminal-server/mcp-rust-server/target/debug/deps/libxattr-c176d45f37a08567.rlib: /Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/xattr-1.5.0/src/lib.rs /Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/xattr-1.5.0/src/error.rs /Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/xattr-1.5.0/src/sys/mod.rs /Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/xattr-1.5.0/src/util.rs /Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/xattr-1.5.0/src/sys/linux_macos.rs
+
+/Users/richardbownes/mcp-terminal-server/mcp-rust-server/target/debug/deps/xattr-c176d45f37a08567.d: /Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/xattr-1.5.0/src/lib.rs /Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/xattr-1.5.0/src/error.rs /Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/xattr-1.5.0/src/sys/mod.rs /Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/xattr-1.5.0/src/util.rs /Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/xattr-1.5.0/src/sys/linux_macos.rs
+
+/Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/xattr-1.5.0/src/lib.rs:
+/Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/xattr-1.5.0/src/error.rs:
+/Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/xattr-1.5.0/src/sys/mod.rs:
+/Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/xattr-1.5.0/src/util.rs:
+/Users/richardbownes/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/xattr-1.5.0/src/sys/linux_macos.rs:

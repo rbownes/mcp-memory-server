@@ -1,13 +1,19 @@
 {
-  "name": "mcp-rust-server",
-  "version": "1.0.0",
+  "name": "mcp-memory-service-rs",
+  "version": "0.1.0",
   "main": "test-mcp-server.js",
   "scripts": {
     "test": "node test-mcp-server.js",
     "start": "cargo run"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
+  "keywords": [
+    "mcp",
+    "memory",
+    "rust",
+    "embeddings",
+    "vector-database"
+  ],
+  "author": "Anthropic",
+  "license": "MIT",
+  "description": "Rust implementation of the MCP Memory Service using the Rust MCP SDK"
 }
