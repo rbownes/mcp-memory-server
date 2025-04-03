@@ -191,9 +191,9 @@ graph TD
 
     subgraph "MCP Memory Service (Rust Application)"
         direction TB
-        StdioTransport -- Forwards Requests --> ServerCore{MCP Server Core} %% Simplified Label
+        StdioTransport -- Forwards Requests --> ServerCore{MCP Server Core} 
 
-        ServerCore -- Reads --> Config(Configuration) %% Simplified Label
+        ServerCore -- Reads --> Config(Configuration) 
         ServerCore -- Instantiates --> EmbeddingImpl{{Selected Embedding Generator}}
         ServerCore -- Instantiates --> StorageImpl{{Selected Storage Backend}}
         ServerCore -- Uses Tool Impls --> ToolLogic(Tool Logic: store, retrieve, search, delete)
@@ -213,7 +213,7 @@ graph TD
             OnnxEmbed -- Uses Lib --> TokenizersLib[tokenizers crate]
         end
 
-        subgraph SL [Storage Layer] %% Simplified Label
+        subgraph SL [Storage Layer]
             direction TB
             StorageImpl -- Is an instance of --> StorageTrait(MemoryStorage Trait)
             InMemoryStorage(InMemoryStorage) -- Implements --> StorageTrait
