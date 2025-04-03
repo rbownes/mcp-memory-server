@@ -200,11 +200,11 @@ graph TD
 
         ToolLogic -- Uses --> StorageImpl
         ToolLogic -- Uses --> EmbeddingImpl
-        ToolLogic -- Uses --> Models(Data Models) %% Simplified Label
-        ToolLogic -- Uses --> Utils(Utilities) %% Simplified Label
+        ToolLogic -- Uses --> Models(Data Models) 
+        ToolLogic -- Uses --> Utils(Utilities) 
 
         %% FIX: Added IDs EL and SL to subgraphs below
-        subgraph EL [Embedding Layer] %% Simplified Label
+        subgraph EL [Embedding Layer]
             direction TB
             EmbeddingImpl -- Is an instance of --> EmbeddingTrait(EmbeddingGenerator Trait)
             DummyEmbed(DummyEmbeddingGenerator) -- Implements --> EmbeddingTrait
