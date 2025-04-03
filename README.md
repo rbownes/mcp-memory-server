@@ -199,7 +199,7 @@ graph TD
         ServerCore -- Uses Tool Impls --> ToolLogic(Tool Logic: store, retrieve, search, delete)
 
         ToolLogic -- Uses --> StorageImpl
-        ToolLogic -- Uses --> EmbeddingImpl  // For retrieve query embedding
+        ToolLogic -- Uses --> EmbeddingImpl  / For retrieve query embedding
         ToolLogic -- Uses --> Models(Data Models / models.rs)
         ToolLogic -- Uses --> Utils(Utilities / utils.rs)
 
@@ -217,7 +217,7 @@ graph TD
             StorageImpl -- Is an instance of --> StorageTrait(MemoryStorage Trait)
             InMemoryStorage(InMemoryStorage) -- Implements --> StorageTrait
             ChromaStorage(ChromaMemoryStorage) -- Implements --> StorageTrait
-            StorageImpl -- Uses --> EmbeddingImpl // For storing embeddings
+            StorageImpl -- Uses --> EmbeddingImpl / For storing embeddings
             StorageImpl -- Uses --> Models
             ChromaStorage -- Uses Lib --> ReqwestLib[reqwest crate]
         end
