@@ -191,19 +191,20 @@ graph TD
 
     subgraph "MCP Memory Service (Rust Application)"
         direction TB
-        StdioTransport -- Forwards Requests --> ServerCore{MCP Server Core / main.rs}
+        StdioTransport -- Forwards Requests --> ServerCore{MCP Server Core} %% Simplified Label
 
-        ServerCore -- Reads --> Config(Configuration / config.rs)
+        ServerCore -- Reads --> Config(Configuration) %% Simplified Label
         ServerCore -- Instantiates --> EmbeddingImpl{{Selected Embedding Generator}}
         ServerCore -- Instantiates --> StorageImpl{{Selected Storage Backend}}
         ServerCore -- Uses Tool Impls --> ToolLogic(Tool Logic: store, retrieve, search, delete)
 
         ToolLogic -- Uses --> StorageImpl
         ToolLogic -- Uses --> EmbeddingImpl
-        ToolLogic -- Uses --> Models(Data Models / models.rs)
-        ToolLogic -- Uses --> Utils(Utilities / utils.rs)
+        ToolLogic -- Uses --> Models(Data Models) %% Simplified Label
+        ToolLogic -- Uses --> Utils(Utilities) %% Simplified Label
 
-        subgraph "Embedding Layer (embeddings.rs)"
+        %% FIX: Added IDs EL and SL to subgraphs below
+        subgraph EL [Embedding Layer] %% Simplified Label
             direction TB
             EmbeddingImpl -- Is an instance of --> EmbeddingTrait(EmbeddingGenerator Trait)
             DummyEmbed(DummyEmbeddingGenerator) -- Implements --> EmbeddingTrait
@@ -212,12 +213,11 @@ graph TD
             OnnxEmbed -- Uses Lib --> TokenizersLib[tokenizers crate]
         end
 
-        subgraph "Storage Layer (storage/*)"
+        subgraph SL [Storage Layer] %% Simplified Label
             direction TB
             StorageImpl -- Is an instance of --> StorageTrait(MemoryStorage Trait)
             InMemoryStorage(InMemoryStorage) -- Implements --> StorageTrait
             ChromaStorage(ChromaMemoryStorage) -- Implements --> StorageTrait
-            %% FIX: Removed comment from the line below
             StorageImpl -- Uses --> EmbeddingImpl
             StorageImpl -- Uses --> Models
             ChromaStorage -- Uses Lib --> ReqwestLib[reqwest crate]
@@ -239,7 +239,8 @@ graph TD
     class EmbeddingTrait,StorageTrait trait;
     class EmbeddingImpl,StorageImpl,DummyEmbed,OnnxEmbed,InMemoryStorage,ChromaStorage impl;
     class OrtLib,TokenizersLib,ReqwestLib lib;
-    class Embedding Logic, Storage Layer module
+    %% FIX: Used subgraph IDs EL and SL below
+    class EL,SL module
 ```
 
 ## License
