@@ -176,6 +176,71 @@ For Claude VSCode extension, the configuration would be added to:
 - Add authentication and authorization
 - Add support for more transports (HTTP, WebSocket, etc.)
 
+## Architecture
+
+```mermaid
+graph TD
+    subgraph "External Interactions"
+        direction LR
+        Client([MCP Client]) -. JSON-RPC .-> StdioTransport[Stdio Transport]
+        EnvVars[(Environment Variables)] -.-> Config
+        ChromaDBServer[(ChromaDB Server)] <-. HTTP API .-> ChromaStorage
+        OnnxModel[("ONNX Model File (.onnx)")] <-. Loads .-> OnnxEmbed
+        TokenizerFile[("Tokenizer File (tokenizer.json)")] <-. Loads .-> OnnxEmbed
+    end
+
+    subgraph "MCP Memory Service (Rust Application)"
+        direction TB
+        StdioTransport -- Forwards Requests --> ServerCore{MCP Server Core / main.rs}
+
+        ServerCore -- Reads --> Config(Configuration / config.rs)
+        ServerCore -- Instantiates --> EmbeddingImpl{{Selected Embedding Generator}}
+        ServerCore -- Instantiates --> StorageImpl{{Selected Storage Backend}}
+        ServerCore -- Uses Tool Impls --> ToolLogic(Tool Logic: store, retrieve, search, delete)
+
+        ToolLogic -- Uses --> StorageImpl
+        ToolLogic -- Uses --> EmbeddingImpl  // For retrieve query embedding
+        ToolLogic -- Uses --> Models(Data Models / models.rs)
+        ToolLogic -- Uses --> Utils(Utilities / utils.rs)
+
+        subgraph "Embedding Layer (embeddings.rs)"
+            direction TB
+            EmbeddingImpl -- Is an instance of --> EmbeddingTrait(EmbeddingGenerator Trait)
+            DummyEmbed(DummyEmbeddingGenerator) -- Implements --> EmbeddingTrait
+            OnnxEmbed(OnnxEmbeddingGenerator) -- Implements --> EmbeddingTrait
+            OnnxEmbed -- Uses Lib --> OrtLib[ort crate]
+            OnnxEmbed -- Uses Lib --> TokenizersLib[tokenizers crate]
+        end
+
+        subgraph "Storage Layer (storage/*)"
+            direction TB
+            StorageImpl -- Is an instance of --> StorageTrait(MemoryStorage Trait)
+            InMemoryStorage(InMemoryStorage) -- Implements --> StorageTrait
+            ChromaStorage(ChromaMemoryStorage) -- Implements --> StorageTrait
+            StorageImpl -- Uses --> EmbeddingImpl // For storing embeddings
+            StorageImpl -- Uses --> Models
+            ChromaStorage -- Uses Lib --> ReqwestLib[reqwest crate]
+        end
+
+    end
+
+    %% Styling
+    classDef external fill:#f9f,stroke:#333,stroke-width:1px;
+    classDef rust_app fill:#e6ffed,stroke:#333,stroke-width:1px;
+    classDef trait fill:#lightblue,stroke:#333,stroke-width:1px;
+    classDef impl fill:#lightgrey,stroke:#333,stroke-width:1px;
+    classDef module fill:#whitesmoke,stroke:#333,stroke-width:1px;
+    classDef lib fill:#cornsilk,stroke:#333,stroke-width:1px;
+
+
+    class Client,EnvVars,ChromaDBServer,OnnxModel,TokenizerFile external;
+    class StdioTransport,ServerCore,ToolLogic,Config,Models,Utils rust_app;
+    class EmbeddingTrait,StorageTrait trait;
+    class EmbeddingImpl,StorageImpl,DummyEmbed,OnnxEmbed,InMemoryStorage,ChromaStorage impl;
+    class OrtLib,TokenizersLib,ReqwestLib lib;
+    class Embedding Logic, Storage Layer module
+```
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
